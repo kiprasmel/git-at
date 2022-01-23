@@ -1,0 +1,30 @@
+git-at
+======
+
+somehow i didn't know that you can do
+
+```
+git show <commit-ish>:<filepath>
+```
+
+to view a file at a specific point in history, until [1].
+
+git-at is just a very simple wrapper script that will
+cat the file, place the contents into
+/tmp/git-at/<repo_name>/<rel_path_to_file>,
+will remove the write permission
+and will open it with your $EDITOR.
+
+note it's not POSIX-compliant. PRs welcome.
+
+---
+
+[1] https://youtu.be/ig5E8CcdM9g?t=48m59s
+
+though, if you're looking for intro videos on how git works
+internally, [2] might be a better start, and [3] afterwards,
+and then [1] - at least that was my order of going thru them.
+
+[2] https://youtu.be/lG90LZotrpo
+[3] https://youtu.be/P6jD966jzlk
+

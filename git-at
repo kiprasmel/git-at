@@ -1,0 +1,35 @@
+#!/bin/sh
+
+set -e
+
+help="git-at <commit-ish> <file|filepath|relative filepath>\n"
+
+[ -z "$1" ] || [ -z "$2" ] && {
+	printf "$help"
+	exit 1
+}
+
+time="$1"
+file="$2"
+shift
+shift
+
+repo_path="$(git rev-parse --show-toplevel)"
+
+# need a relative path
+# because git does not want an absolute one
+#
+# note that --relative-to is NOT posix.
+#
+filepath="$(realpath --relative-to="$repo_path" "$file")"
+
+ago_dir="/tmp/ago"
+mkdir -p "$ago_dir"
+
+filebase="$(basename "$file")"
+outfilepath="$ago_dir/$time:$filebase"
+
+/usr/bin/env git -c core.pager="cat" show "$time:$filepath" > "$outfilepath"
+
+$EDITOR "$outfilepath"
+
