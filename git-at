@@ -15,6 +15,7 @@ shift
 shift
 
 repo_path="$(git rev-parse --show-toplevel)"
+repo_name="$(basename "$repo_path")"
 
 # need a relative path
 # because git does not want an absolute one
@@ -29,7 +30,7 @@ mkdir -p "$ago_dir"
 filebase="$(basename "$file")"
 #outfilepath="$ago_dir/$time:$filebase"
 dirpath=$(dirname "$filepath")
-outfilepath="$ago_dir/$dirpath/$time:$filebase"
+outfilepath="$ago_dir/$repo_name/$dirpath/$time:$filebase"
 mkdir -p "$(dirname "$outfilepath")"
 
 /usr/bin/env git -c core.pager="cat" show "$time:$filepath" > "$outfilepath"
