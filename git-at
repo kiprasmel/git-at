@@ -33,7 +33,18 @@ dirpath=$(dirname "$filepath")
 outfilepath="$ago_dir/$repo_name/$dirpath/$time:$filebase"
 mkdir -p "$(dirname "$outfilepath")"
 
+[ -f "$outfilepath" ] && {
+	# remove the file first, if it exists,
+	# because we later remove the write permission
+	chmod +w "$outfilepath"
+	rm -f "$outfilepath"
+}
+
 /usr/bin/env git -c core.pager="cat" show "$time:$filepath" > "$outfilepath"
+
+# remove write permission to remind
+# that you're viewing a file from a while ago
+chmod -w "$outfilepath"
 
 $EDITOR "$outfilepath"
 
