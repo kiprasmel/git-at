@@ -27,7 +27,10 @@ ago_dir="/tmp/git-at"
 mkdir -p "$ago_dir"
 
 filebase="$(basename "$file")"
-outfilepath="$ago_dir/$time:$filebase"
+#outfilepath="$ago_dir/$time:$filebase"
+dirpath=$(dirname "$filepath")
+outfilepath="$ago_dir/$dirpath/$time:$filebase"
+mkdir -p "$(dirname "$outfilepath")"
 
 /usr/bin/env git -c core.pager="cat" show "$time:$filepath" > "$outfilepath"
 
