@@ -2,10 +2,10 @@
 
 set -e
 
-help="git-at <commit-ish> <file|filepath|relative filepath>\n"
+help="git-at <commit-ish> <file|filepath|relative filepath> [-w]"
 
 [ -z "$1" ] || [ -z "$2" ] && {
-	printf "$help"
+	>&2 echo "$help"
 	exit 1
 }
 
@@ -13,6 +13,22 @@ time="$1"
 file="$2"
 shift
 shift
+
+WRITE_TO_HEAD=0
+
+while test $# -gt 0; do
+	case $1 in
+		-w)
+			WRITE_TO_HEAD=1
+			shift
+			;;
+		*)
+			>&2 echo "$help"
+			>&2 echo "\nunknown opt '$1'."
+			exit 1
+			;;
+	esac
+done
 
 repo_path="$(git rev-parse --show-toplevel)"
 repo_name="$(basename "$repo_path")"
@@ -40,7 +56,12 @@ mkdir -p "$(dirname "$outfilepath")"
 	rm -f "$outfilepath"
 }
 
-/usr/bin/env git -c core.pager="cat" show "$time:$filepath" > "$outfilepath"
+if [ "$WRITE_TO_HEAD" -eq 1 ]; then
+	/usr/bin/env git -c core.pager="cat" show "$time:$filepath" > "$filepath"
+	exit 0
+else
+	/usr/bin/env git -c core.pager="cat" show "$time:$filepath" > "$outfilepath"
+fi
 
 # remove write permission to remind
 # that you're viewing a file from a while ago
