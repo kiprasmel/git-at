@@ -46,5 +46,7 @@ mkdir -p "$(dirname "$outfilepath")"
 # that you're viewing a file from a while ago
 chmod -w "$outfilepath"
 
-$EDITOR "$outfilepath"
+[ -z "$YES" ] && {
+	$EDITOR "$outfilepath"
+}
 
